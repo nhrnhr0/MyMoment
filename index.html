@@ -146,6 +146,14 @@
         textarea {
             border: 1px solid #2C3E50;
         }
+
+        .disclaymer{
+            background-color: #fcf7f7;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
@@ -179,41 +187,45 @@
                     <p>צבע הדפסה: <input type="text" id="printColor"></p>
                 </div>
                 <div>
-                    <p>תאריך: <input type="text" id="date"></p>
-                    <p>גודל הדפסה: <input type="text" id="printSize"></p>
-                    <p>מבצע הזמנה: <input type="text" id="orderExecutor"></p>
-                    <p>הורדה ובדיקת מסמכים: <input type="text" id="documentsCheck"></p>
-                    <p>בדיקת סיום עבודה: <input type="text" id="workCompletionCheck"></p>
+                    <p>תאריך: <input type="text" id="date" disabled></p>
+                    <p>גודל הדפסה: <input type="text" id="printSize" disabled></p>
+                    <p>מבצע הזמנה: <input type="text" id="orderExecutor" disabled></p>
+                    <p>הורדה ובדיקת מסמכים: <input type="text" id="documentsCheck" disabled></p>
+                    <p>בדיקת סיום עבודה: <input type="text" id="workCompletionCheck" disabled></p>
                 </div>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="laserEmbroidery">
+                <input class="form-check-input" type="checkbox" id="laserEmbroidery" disabled>
                 <label class="form-check-label" for="laserEmbroidery">רקמה לייזר</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="uv">
+                <input class="form-check-input" type="checkbox" id="uv" disabled>
                 <label class="form-check-label" for="uv">UV</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="tiff">
+                <input class="form-check-input" type="checkbox" id="tiff" disabled>
                 <label class="form-check-label" for="tiff">TIFF</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="digital">
+                <input class="form-check-input" type="checkbox" id="digital" disabled>
                 <label class="form-check-label" for="digital">דיגיטלי</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="silk">
+                <input class="form-check-input" type="checkbox" id="silk" disabled>
                 <label class="form-check-label" for="silk">משי</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="sticker">
+                <input class="form-check-input" type="checkbox" id="sticker" disabled>
                 <label class="form-check-label" for="sticker">מדבקה</label>
             </div>
             <div class="form-group">
                 <label for="fileUpload">העלאת קבצים</label>
-                <input type="file" class="form-control" id="fileUpload" name="files[]" multiple>
+                <input type="file" class="form-control" id="fileUpload" name="files[]" multiple
+                onchange="newFilesUpload(event)"
+                >
             </div>
+            <div class="form-group" id="filesComments"></div>
+
     
             <p class="text-danger">* אין לעבוד ללא הזמנה והדמיה!</p>
             <div class="table-responsive">
@@ -265,12 +277,24 @@
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" id="delivery">
                 <label class="form-check-label" for="delivery">משלוח</label>
+                <input type="text" id="deliveryAddress" style="width: 100px; border: none; border-bottom: 1px solid #2C3E50; text-align: center;">
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" id="story">
                 <label class="form-check-label" for="story">סטורי</label>
             </div>
             <p id="validate-error-message" class="text-danger"></p>
+
+
+
+            <div class="disclaymer">
+                <b>
+                שים לב! <br>
+                </b>
+                לאחר אישור הגהה וגרפיקה לא ניתן לשנות, כל שינוי נוסף או אחר יהיה על חשבון הלקוח. <br>
+                ההדפסות במפעל הן בעבודת יד אומנותיות לכן עלולה להיות סטייה.
+            </div>
+
             <button type="button" class="btn btn-primary" onclick="saveData()" id="submit-btn">שמור נתונים</button>
             <!-- <button type="button" class="btn btn-secondary" onclick="loadData()">טען נתונים</button> -->
         </form>
@@ -285,12 +309,28 @@
         let products_table_size = 0;
         let products_table_tbody = document.getElementById('products-table');
         let products_list = undefined;
-        const APPSCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyGgmk1Ku6ZTvjoVC2lNRDpd4MFbQz5_yHdQaPxCfDNKg4IUi7bsQMRnWRGQVTC3JrlQ/exec';
+        const APPSCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynvLQzC4Ypkbpik8wyMwcbtOU7G4h4pbr-dAAsM4JmcqWTNpB6mDyF0kaPLo6gmSWtCw/exec';
         // when the document is loaded, we add 10 new rows to the table
         // document.addEventListener('DOMContentLoaded', () => {
             
             
         // },false);
+
+        function newFilesUpload(event){
+            console.log(event.target.files);
+            let filesComments = document.getElementById('filesComments');
+            filesComments.innerHTML = '';
+            // for each file, show each name and input for comments
+            for (let i = 0; i < event.target.files.length; i++) {
+                let file = event.target.files[i];
+                let fileComment = document.createElement('div');
+                fileComment.innerHTML = `
+                    <p>${file.name}
+                    <input type="text" placeholder="הערות לקובץ (איפה להדפיס)" style="width: 100%; border: none; border-bottom: 1px solid #2C3E50; text-align: center;"></p>
+                `;
+                filesComments.appendChild(fileComment);
+            }
+        }
 
         async function fetch_products_list(){
             let response = await fetch(APPSCRIPT_URL);
@@ -455,6 +495,7 @@
                 fullPartialPayment: document.getElementById('fullPartialPayment').checked,
                 paymentAmount: document.getElementById('paymentAmount').value,
                 delivery: document.getElementById('delivery').checked,
+                deliveryAddress: document.getElementById('deliveryAddress').value,
                 story: document.getElementById('story').checked,
             };
             localStorage.setItem('formData', JSON.stringify({
@@ -469,7 +510,9 @@
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
                     reader.onload = function (e) {
-                        files64EncodeArray.push({'name': file.name, 'data': e.target.result});
+                        files64EncodeArray.push({'name': file.name, 'data': e.target.result,
+                        'comment': document.getElementById('filesComments').children[files64EncodeArray.length].querySelector('input').value
+                        });
                         resolve();
                     };
                     reader.onerror = reject;
@@ -484,7 +527,7 @@
                 //     additionalData
                 // }));
                 // alert('Data saved!');
-                alert('sending request');
+                // alert('sending request');
                 saveToGoogleSheets(data, additionalData, files64EncodeArray); // Call the function to save data to Google Sheets
             })
             .catch(error => {
@@ -515,14 +558,15 @@
                 })
                 .then(response => {
                     console.log('Success:', response);
-                    alert('Data saved!');
+                    alert('נשמר בהצלחה');
+                    document.getElementById('orderForm').reset();
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 }).finally(() => {
                     document.getElementById('submit-btn').disabled = false;
                     document.getElementById('submit-btn').innerText = 'שמור נתונים';
-                    document.getElementById('orderForm').reset();
+                    
                 });
         }
     </script>

@@ -165,36 +165,21 @@
         <form id="orderForm"  enctype="multipart/form-data">
             <div class="form-section">
                 <div>
-                    <div class="form-group">
-                        <!-- <datalist id="list-timezone">
-                            <option>Asia/Aden</option>
-                            <option>Asia/Aqtau</option>
-                            <option>Asia/Baghdad</option>
-                            <option>Asia/Barnaul</option>
-                            <option>Asia/Chita</option>
-                            <option>Asia/Dhaka</option>
-                            <option>Asia/Famagusta</option>
-                            <option>Asia/Hong_Kong</option>
-                            <option>Asia/Jayapura</option>
-                            <option>Asia/Kuala_Lumpur</option>
-                            <option>Asia/Jakarta</option>
-                        </datalist> -->
-                    </div>
                     <p>שם לקוח: <input type="text" id="customerName"></p>
                     <p>נייד: <input type="text" id="phoneNumber"></p>
-                    <p>לביצוע ע"י: <input type="text" id="byWho"></p>
+                    <!-- <p>לביצוע ע"י: <input type="text" id="byWho"></p> -->
                     <p>סוג הדפסה: <input type="text" id="printType"></p>
                     <p>צבע הדפסה: <input type="text" id="printColor"></p>
                 </div>
-                <div>
+                <!-- <div>
                     <p>תאריך: <input type="text" id="date" disabled></p>
                     <p>גודל הדפסה: <input type="text" id="printSize" disabled></p>
                     <p>מבצע הזמנה: <input type="text" id="orderExecutor" disabled></p>
                     <p>הורדה ובדיקת מסמכים: <input type="text" id="documentsCheck" disabled></p>
                     <p>בדיקת סיום עבודה: <input type="text" id="workCompletionCheck" disabled></p>
-                </div>
+                </div> -->
             </div>
-            <div class="form-check form-check-inline">
+            <!-- <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" id="laserEmbroidery" disabled>
                 <label class="form-check-label" for="laserEmbroidery">רקמה לייזר</label>
             </div>
@@ -217,7 +202,7 @@
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" id="sticker" disabled>
                 <label class="form-check-label" for="sticker">מדבקה</label>
-            </div>
+            </div> -->
             <div class="form-group">
                 <label for="fileUpload">העלאת קבצים</label>
                 <input type="file" class="form-control" id="fileUpload" name="files[]" multiple
@@ -512,20 +497,20 @@
             const additionalData = {
                 customerName: document.getElementById('customerName').value,
                 phoneNumber: document.getElementById('phoneNumber').value,
-                byWho: document.getElementById('byWho').value,
+                byWho: '',
                 printType: document.getElementById('printType').value,
                 printColor: document.getElementById('printColor').value,
-                date: document.getElementById('date').value,
-                printSize: document.getElementById('printSize').value,
-                orderExecutor: document.getElementById('orderExecutor').value,
-                documentsCheck: document.getElementById('documentsCheck').value,
-                workCompletionCheck: document.getElementById('workCompletionCheck').value,
-                laserEmbroidery: document.getElementById('laserEmbroidery').checked,
-                uv: document.getElementById('uv').checked,
-                tiff: document.getElementById('tiff').checked,
-                digital: document.getElementById('digital').checked,
-                silk: document.getElementById('silk').checked,
-                sticker: document.getElementById('sticker').checked,
+                date: new Date().toDateString(),
+                printSize: '',
+                orderExecutor: '',
+                documentsCheck: '',
+                workCompletionCheck: '',
+                laserEmbroidery: false,
+                uv: false,
+                tiff: false,
+                digital: false,
+                silk: false,
+                sticker: false,
                 additionalNotes: document.getElementById('additionalNotes').value,
                 fullPartialPayment: document.getElementById('fullPartialPayment').checked,
                 paymentAmount: document.getElementById('paymentAmount').value,

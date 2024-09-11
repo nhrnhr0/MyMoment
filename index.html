@@ -500,7 +500,12 @@
                 byWho: '',
                 printType: document.getElementById('printType').value,
                 printColor: document.getElementById('printColor').value,
-                date: new Date().toDateString(),
+                date: new Intl.DateTimeFormat('he-IL', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    // Replace the default dots with slashes
+                    }).format(new Date()).replace(/\./g, '/'),
                 printSize: '',
                 orderExecutor: '',
                 documentsCheck: '',
